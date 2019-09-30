@@ -37,7 +37,7 @@ class PublicUserApiTests(TestCase):
 
     def test_user_exists(self):
         """ Test creating a user that already exists fails"""
-        payload = {'email': 'test@michaelhixson.com','password': 'testpass'}
+        payload = {'email': 'test@michaelhixson.com', 'password': 'testpass'}
         create_user(**payload)
         res = self.client.post(CREATE_USER_URL, payload)
 
@@ -45,7 +45,7 @@ class PublicUserApiTests(TestCase):
 
     def test_password_too_short(self):
         """Test that the password must be more than 5 characters"""
-        payload = {'email': 'test@michaelhixson.com','password': 'wrong'}
+        payload = {'email': 'test@michaelhixson.com', 'password': 'wrong'}
         res = self.client.post(CREATE_USER_URL, payload)
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
@@ -83,7 +83,7 @@ class PublicUserApiTests(TestCase):
     def test_create_token_missing_field(self):
         """Test that email and password are required"""
         res = self.client.post(TOKEN_URL, {'email': 'one', 'password': ''})
-        
+
         self.assertNotIn('token', res.data)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -93,14 +93,15 @@ class PublicUserApiTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
+
 class PrivateUserApiTests(TestCase):
     """Test API requests that require authentication"""
 
     def setUp(self):
         self.user = create_user(
-          email='test@michaelhixson.com',
-          password='testpass',
-          name='name'  
+            email='test@londonappdev.com',
+            password='newpassword123',
+            name='new name',
         )
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
@@ -122,14 +123,12 @@ class PrivateUserApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_update_user_profile(self):
-        """Test updating the user profile for authenticated user"""
         payload = {'name': 'new name', 'password': 'newpassword123'}
 
         res = self.client.patch(ME_URL, payload)
-
+        print (ME_URL)
+        
         self.user.refresh_from_db()
         self.assertEqual(self.user.name, payload['name'])
         self.assertTrue(self.user.check_password(payload['password']))
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-
-
