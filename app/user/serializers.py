@@ -24,7 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
             user.set_password(password)
             user.save()
 
-            return user
+        return user
 
 
 class AuthTokenSerializer(serializers.Serializer):
@@ -41,7 +41,7 @@ class AuthTokenSerializer(serializers.Serializer):
         password = attrs.get('password')
 
         user = authenticate(
-            request=self.context.get('requests'),
+            request=self.context.get('request'),
             username=email,
             password=password
         )

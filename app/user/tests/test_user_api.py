@@ -99,9 +99,9 @@ class PrivateUserApiTests(TestCase):
 
     def setUp(self):
         self.user = create_user(
-            email='test@londonappdev.com',
-            password='newpassword123',
-            name='new name',
+            email='test@michaelhixson.com',
+            password='testpass',
+            name='name'
         )
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
@@ -123,11 +123,10 @@ class PrivateUserApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_update_user_profile(self):
+        """Test updating the user profile for authenticated user"""
         payload = {'name': 'new name', 'password': 'newpassword123'}
 
         res = self.client.patch(ME_URL, payload)
-        print (ME_URL)
-        
         self.user.refresh_from_db()
         self.assertEqual(self.user.name, payload['name'])
         self.assertTrue(self.user.check_password(payload['password']))
