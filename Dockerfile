@@ -4,6 +4,7 @@ LABEL key="Michael Hixson"
 ENV PYTHONUNBUFFERED 1
 
 COPY ./requirements.txt /requirements.txt
+COPY ./nosxihdsview01.pem /nosxihdsview01.pem
 RUN apk add --update --no-cache postgresql-client libxml2-dev libxslt-dev
 RUN apk add --update --no-cache --virtual .tmp-build-deps \
         gcc libc-dev linux-headers postgresql-dev
