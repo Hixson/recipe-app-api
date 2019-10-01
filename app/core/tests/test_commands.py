@@ -1,3 +1,4 @@
+import sys
 from unittest.mock import patch
 
 from django.core.management import call_command
@@ -21,3 +22,7 @@ class CommandTests(TestCase):
             gi.side_effect = [OperationalError] * 5 + [True]
             call_command('wait_for_db')
             self.assertEqual(gi.call_count, 6)
+
+    def test_zeep_import(self):
+        """Test that the zeep module is loaded properly"""
+        self.assertTrue('zeep' in sys.modules)
